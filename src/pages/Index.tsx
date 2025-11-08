@@ -3,14 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Sparkles, BookOpen, PenTool } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Loader2, Sparkles, BookOpen, PenTool, Library, Search } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import dhadIcon from "@/assets/dhad-icon.png";
 
 const Index = () => {
   const [inputText, setInputText] = useState("");
   const [correctedText, setCorrectedText] = useState("");
   const [analysis, setAnalysis] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
 
   const handleCorrection = async () => {
@@ -67,34 +70,39 @@ const Index = () => {
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-5xl mx-auto space-y-6">
           {/* Hero Section */}
-          <Card className="border-primary/20 bg-gradient-subtle shadow-gold">
+          <Card className="border-primary/20 bg-gradient-subtle shadow-gold overflow-hidden relative">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-islamic"></div>
             <CardHeader className="text-center">
               <div className="flex justify-center mb-4">
-                <Sparkles className="w-12 h-12 text-primary animate-pulse" />
+                <img src={dhadIcon} alt="حرف الضاد" className="w-16 h-16 object-contain drop-shadow-lg animate-pulse" />
               </div>
-              <CardTitle className="text-3xl font-bold text-foreground">
+              <CardTitle className="text-4xl font-bold text-foreground mb-2 font-arabic">
                 مُصَحِّح اللغة العربية بالذكاء الاصطناعي
               </CardTitle>
-              <CardDescription className="text-lg text-muted-foreground">
-                تصحيح القواعد النحوية والإملائية، وتحليل الشعر والنصوص الأدبية
+              <CardDescription className="text-lg text-muted-foreground leading-relaxed">
+                تصحيح القواعد النحوية والإملائية، تحليل الشعر، والمعجم اللغوي
               </CardDescription>
             </CardHeader>
           </Card>
 
           {/* Main Tool */}
           <Tabs defaultValue="correction" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 bg-muted/50">
-              <TabsTrigger value="correction" className="gap-2">
+            <TabsList className="grid w-full grid-cols-4 bg-muted/50 backdrop-blur-sm">
+              <TabsTrigger value="correction" className="gap-2 data-[state=active]:bg-gradient-islamic data-[state=active]:text-primary-foreground">
                 <PenTool className="w-4 h-4" />
                 تصحيح النصوص
               </TabsTrigger>
-              <TabsTrigger value="grammar" className="gap-2">
+              <TabsTrigger value="grammar" className="gap-2 data-[state=active]:bg-gradient-islamic data-[state=active]:text-primary-foreground">
                 <BookOpen className="w-4 h-4" />
                 القواعد النحوية
               </TabsTrigger>
-              <TabsTrigger value="poetry" className="gap-2">
+              <TabsTrigger value="poetry" className="gap-2 data-[state=active]:bg-gradient-islamic data-[state=active]:text-primary-foreground">
                 <Sparkles className="w-4 h-4" />
                 تحليل الشعر
+              </TabsTrigger>
+              <TabsTrigger value="dictionary" className="gap-2 data-[state=active]:bg-gradient-islamic data-[state=active]:text-primary-foreground">
+                <Library className="w-4 h-4" />
+                المعجم اللغوي
               </TabsTrigger>
             </TabsList>
 
@@ -199,7 +207,7 @@ const Index = () => {
             </TabsContent>
 
             <TabsContent value="poetry" className="space-y-4">
-              <Card>
+              <Card className="border-accent/30 shadow-lg">
                 <CardHeader>
                   <CardTitle>تحليل الشعر العربي</CardTitle>
                   <CardDescription>
@@ -209,7 +217,7 @@ const Index = () => {
                 <CardContent className="space-y-4">
                   <Textarea
                     placeholder="اكتب أو الصق الأبيات الشعرية..."
-                    className="min-h-[200px] text-lg resize-none font-serif"
+                    className="min-h-[200px] text-lg resize-none font-arabic"
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
                   />
@@ -234,42 +242,129 @@ const Index = () => {
                 </CardContent>
               </Card>
             </TabsContent>
+
+            <TabsContent value="dictionary" className="space-y-4">
+              <Card className="border-primary/30 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Library className="w-6 h-6 text-primary" />
+                    المعجم اللغوي
+                  </CardTitle>
+                  <CardDescription>
+                    ابحث عن معاني الكلمات ومرادفاتها وأصلها اللغوي
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="relative">
+                    <Search className="absolute right-3 top-3 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      placeholder="ابحث عن كلمة في المعجم..."
+                      className="pr-10 text-lg h-12"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+
+                  {searchTerm && (
+                    <Card className="bg-secondary/10 border-secondary/30">
+                      <CardHeader>
+                        <CardTitle className="text-xl text-secondary font-arabic">
+                          {searchTerm}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                          <h4 className="font-semibold text-foreground">المعنى:</h4>
+                          <p className="text-muted-foreground leading-relaxed">
+                            سيتم عرض معنى الكلمة هنا عند تفعيل الخدمة
+                          </p>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <h4 className="font-semibold text-foreground">المرادفات:</h4>
+                          <div className="flex flex-wrap gap-2">
+                            <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                              مرادف ١
+                            </span>
+                            <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                              مرادف ٢
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <h4 className="font-semibold text-foreground">الأصل اللغوي:</h4>
+                          <p className="text-muted-foreground leading-relaxed">
+                            معلومات عن أصل الكلمة واشتقاقها
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {['بلاغة', 'نحو', 'صرف', 'عروض', 'أدب', 'لغة'].map((category) => (
+                      <Button
+                        key={category}
+                        variant="outline"
+                        className="h-auto py-3 border-primary/30 hover:bg-gradient-islamic hover:text-primary-foreground"
+                      >
+                        <Library className="ml-2 w-4 h-4" />
+                        {category}
+                      </Button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
           </Tabs>
 
           {/* Features Grid */}
-          <div className="grid md:grid-cols-3 gap-4 mt-8">
-            <Card className="border-primary/20 hover:shadow-gold transition-all">
+          <div className="grid md:grid-cols-4 gap-4 mt-8">
+            <Card className="border-primary/20 hover:shadow-gold hover:scale-105 transition-all duration-300 bg-gradient-to-br from-background to-primary/5">
               <CardHeader>
-                <PenTool className="w-8 h-8 text-primary mb-2" />
-                <CardTitle className="text-lg">تصحيح دقيق</CardTitle>
+                <PenTool className="w-10 h-10 text-primary mb-2" />
+                <CardTitle className="text-lg font-arabic">تصحيح دقيق</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground text-sm leading-relaxed">
                   تصحيح الأخطاء الإملائية والنحوية بدقة عالية باستخدام الذكاء الاصطناعي
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-secondary/20 hover:shadow-gold transition-all">
+            <Card className="border-secondary/20 hover:shadow-gold hover:scale-105 transition-all duration-300 bg-gradient-to-br from-background to-secondary/5">
               <CardHeader>
-                <BookOpen className="w-8 h-8 text-secondary mb-2" />
-                <CardTitle className="text-lg">قواعد شاملة</CardTitle>
+                <BookOpen className="w-10 h-10 text-secondary mb-2" />
+                <CardTitle className="text-lg font-arabic">قواعد شاملة</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground text-sm leading-relaxed">
                   تحليل متقدم للإعراب والقواعد النحوية والصرفية
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="border-accent/20 hover:shadow-gold transition-all">
+            <Card className="border-accent/20 hover:shadow-gold hover:scale-105 transition-all duration-300 bg-gradient-to-br from-background to-accent/5">
               <CardHeader>
-                <Sparkles className="w-8 h-8 text-accent mb-2" />
-                <CardTitle className="text-lg">تحليل أدبي</CardTitle>
+                <Sparkles className="w-10 h-10 text-accent mb-2" />
+                <CardTitle className="text-lg font-arabic">تحليل أدبي</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground text-sm leading-relaxed">
                   تحليل الشعر والنصوص الأدبية بكافة أنواعها وأوزانها
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-primary/20 hover:shadow-gold hover:scale-105 transition-all duration-300 bg-gradient-to-br from-background to-primary/5">
+              <CardHeader>
+                <Library className="w-10 h-10 text-primary mb-2" />
+                <CardTitle className="text-lg font-arabic">معجم شامل</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  معجم لغوي متكامل للبحث عن معاني الكلمات ومرادفاتها
                 </p>
               </CardContent>
             </Card>
